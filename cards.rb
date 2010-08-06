@@ -87,7 +87,7 @@ class Deck
   end
    
   def draw_all
-    to_sdiscard = @cards
+    to_discard = @cards
     @cards = []
     to_discard
   end
@@ -107,6 +107,10 @@ class Deck
 
   def []=(index, card)
     @cards[index] = card unless card.class != Card
+  end
+
+  def <<(cards)
+    @cards << cards
   end
 
   def size
