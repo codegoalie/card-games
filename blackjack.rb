@@ -1,4 +1,4 @@
-require 'cards.rb'
+require './cards.rb'
 
 class Hand < Deck
   def value
