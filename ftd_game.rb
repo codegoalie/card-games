@@ -27,7 +27,7 @@ puts game.status
 while ! game.complete do
   while game.guess_count <= MAX_GUESSES do
     puts "It's #{game.player.name}'s turn"
-    puts "#{game.player.name}, what is your #{ordinalize(game.guess_count)} guess?"
+    puts "#{game.player.name}, what is your #{ordinalize(game.guess_count + 1)} guess?"
     # game.guess returns -1 if guess is too high, 1 if guess is too low and 0 if guess is correct
     case game.guess(gets.chomp)
     when -1
