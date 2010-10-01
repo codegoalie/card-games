@@ -1,4 +1,5 @@
 require './cards.rb'
+require './FTD.rb'
 
 MAX_GUESSES = 2
 

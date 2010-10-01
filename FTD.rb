@@ -69,6 +69,7 @@ class FTD
   end
 
   def to_s
+    table_counts = Hash.new(0)
     output = "\nPlayed Cards:\n"
     (0..12).each do 
       output += "-"
