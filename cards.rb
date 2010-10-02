@@ -93,12 +93,18 @@ class Deck
   end
 
   def place(card)
-    @cards ||= []
-    @cards << card
+    if(card.respond_to?('rank') && card.respond_to?('suit'))
+      @cards ||= []
+      @cards << card
+    end
   end
 
   def shuffle
     @cards = @cards.sort_by { rand }
+  end
+
+  def each
+    @cards.each { |card| yield card }
   end
         
   def [](index)

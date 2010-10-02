@@ -14,7 +14,7 @@ game = FTD.new
 #table = Table.new
 
 puts "How many players will there be?"
-player_count = gets.chomp
+player_count = gets.chomp.to_i
 i = 1
 while i <= player_count do
   puts "What is Player #{i}'s Name?"
@@ -51,7 +51,7 @@ while ! game.complete do
     puts "That's 3! #{game.dealer.name} gets to pass the deck!"
     game.advance_dealer
   else
-    puts "#{game.dealer.name} has #{game.gets_count gets"
+    puts "#{game.dealer.name} has #{game.gets_count} gets"
     game.advance_player
   end
   
