@@ -1,31 +1,42 @@
-def Player
+class Player
   attr_accessor :name
+
+  def initialize(name)
+    @name = name
+  end
 end
 
-def Player_Bench
+class Player_Bench
   attr_accessor :players
 
   def initialize 
+    @actors = Hash.new
     @actors[:dealer] = 0
     @actors[:player] = 1
+
+    @players = Array.new
   end
 
-  def add_player(player)
+  def add(player)
     if(player.respond_to?('name'))
-      @players < player
+      @players << player
     end
   end
 
-  def advance_player(actor)
-    move_player(actor, @actors[actor]+1)
+  def advance(actor)
+    move(actor, @actors[actor]+1)
   end
 
-  def move_player(actor, destination)
-    if(@actors.has_value(destination))
-      move_player(actor, destination+1)
-    elsif(destination >= actors.length)
-      move_player(actor, 0)
+  def move(actor, destination)
+    @actors[actor] = -1
+    if(@actors.has_value?(destination))
+      #puts "actor at #{destination}, adv 1"
+      move(actor, destination+1)
+    elsif(destination >= @players.length)
+      #puts "#{destination} is beyond player length, move to 0"
+      move(actor, 0)
     else
+      #puts "#{destination} is good, moving there"
       @actors[actor] = destination
     end
   end
@@ -33,14 +44,13 @@ end
 
 
 
-def FTD_Player < Player
-  attr_accessor :turns, :correct, :first_shot, :drinks
+class FTD_Player < Player
+  attr_accessor :turns, :correct, :bullseyes, :drinks
 
-  def initialize
+  def initialize(name)
     @drinks = 0
     @correct = 0
-    @first_shot = 0
+    @bullseyes = 0
+    super(name)
   end
 end
-
-
