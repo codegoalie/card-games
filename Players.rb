@@ -8,6 +8,7 @@ end
 
 class Player_Bench
   attr_accessor :players
+  attr_reader :actors
 
   def initialize 
     @actors = Hash.new
@@ -15,6 +16,10 @@ class Player_Bench
     @actors[:player] = 1
 
     @players = Array.new
+  end
+
+  def [](i)
+    @players[i]
   end
 
   def add(player)

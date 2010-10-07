@@ -1,5 +1,7 @@
 require './cards.rb'
 require './FTD.rb'
+require './Players.rb'
+require 'active_support/inflector'
 
 MAX_GUESSES = 2
 
@@ -13,13 +15,17 @@ game = FTD.new
 
 #table = Table.new
 
-puts "How many players will there be?"
-player_count = gets.chomp.to_i
-i = 1
-while i <= player_count do
-  puts "What is Player #{i}'s Name?"
-  game.players.add(gets.chomp)
-end
+#puts "How many players will there be?"
+#player_count = gets.chomp.to_i
+#player_count.times do |i|
+#  puts "What is Player #{i+1}'s Name?"
+#  game.players.add(FTD_Player.new(gets.chomp))
+#end
+
+game.players.add(FTD_Player.new("Chris"))
+game.players.add(FTD_Player.new("Hayley"))
+game.players.add(FTD_Player.new("Bobby"))
+game.players.add(FTD_Player.new("Chris"))
 
 puts "Here we go!"
 #print out the table and current dealer & player
@@ -28,7 +34,8 @@ puts game.status
 while ! game.complete do
   while game.guess_count <= MAX_GUESSES do
     puts "It's #{game.player.name}'s turn"
-    puts "#{game.player.name}, what is your #{ordinalize(game.guess_count + 1)} guess?"
+    guess_string = game.guess_count == 0 ? "1st" : "2nd"
+    puts "#{game.player.name}, what is your #{guess_string} guess?"
     # game.guess returns -1 if guess is too high, 1 if guess is too low and 0 if guess is correct
     case game.guess(gets.chomp)
     when -1

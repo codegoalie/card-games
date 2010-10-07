@@ -1,6 +1,7 @@
 class FTD
   DEALER_DRINKS = 5
-  attr_accessor :table, :deck
+  attr_accessor :table, :deck, :players
+  attr_reader :complete, :gets, :guess_count
 
   def initialize
     @deck = Deck.new
@@ -8,20 +9,21 @@ class FTD
     @deck.shuffle
 
     @table = Deck.new
-    @players = Player_Bench.new('FTD_Player')
+    @players = Player_Bench.new
 
     @current_card = @deck.draw
     @guess_count = 0
     @prev_guesses = Array.new
-    @gets_count = 0
+    @gets = 0
+    @complete = false
   end
 
   def player
-    @players[@player]
+    @players[@players.actors[:player]]
   end
 
   def dealer
-    @players[@dealer]
+    @players[@players.actors[:dealer]]
   end
 
   def guess(guess)
@@ -33,7 +35,7 @@ class FTD
       else guess
     end
 
-    guess = Card.new(guess, 1)
+    guess = Card.new(guess.to_i, 1)
     @prev_guesses.push(guess)
     @guess_count += 1
 
@@ -51,22 +53,26 @@ class FTD
     turn_results = Hash.new(0)
     if @current_card == last_guess
       turn_results[:dealers_drinks] = @guess_count * DEALER_DRINKS
-      @gets_count = 0
+      @gets = 0
     else
       turn_results[:players_drinks] = (last_guess - @current_card).abs
-      @gets_count += 1
+      @gets += 1
     end
 
     @guess_count = 0
 
     turn_results[:card_string] = @current_card.to_s
     @table.place @current_card 
-    @current_card = @deck.draw
+    if(@deck.size > 0)
+      @current_card = @deck.draw
+    else
+      @complete = true
+    end
 
     turn_results
   end
 
-  def to_s
+  def status
     table_counts = Hash.new(0)
     @table.each do |card|
       table_counts[card.rank.to_c] += 1
