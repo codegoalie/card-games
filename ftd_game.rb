@@ -3,7 +3,6 @@ require './FTD.rb'
 require './Players.rb'
 require 'active_support/inflector'
 
-MAX_GUESSES = 2
 
 puts "Welcome to textual Fuck The Dealer"
 puts "Let's get schwasted!"
@@ -25,42 +24,50 @@ game = FTD.new
 game.players.add(FTD_Player.new("Chris"))
 game.players.add(FTD_Player.new("Hayley"))
 game.players.add(FTD_Player.new("Bobby"))
-game.players.add(FTD_Player.new("Chris"))
+game.players.add(FTD_Player.new("Katie"))
 
 puts "Here we go!"
 #print out the table and current dealer & player
 puts game.status
 
 while ! game.complete do
-  while game.guess_count <= MAX_GUESSES do
-    puts "It's #{game.player.name}'s turn"
+  puts "It's #{game.player.name}'s turn"
+  while game.guess_count < FTD::MAX_GUESSES do
     guess_string = game.guess_count == 0 ? "1st" : "2nd"
     puts "#{game.player.name}, what is your #{guess_string} guess?"
     # game.guess returns -1 if guess is too high, 1 if guess is too low and 0 if guess is correct
-    case game.guess(gets.chomp)
-    when -1
-      puts "Lower"
-    when 1
-      puts "Higher"
-    else
-      puts "Correct!"
-      break
+    #guess = game.guess(gets.chomp)
+    guess = game.guess(2+rand(12))
+    if(game.guess_count < FTD::MAX_GUESSES)
+      case guess
+      when -1
+        puts "Lower"
+      when 1
+        puts "Higher"
+      else
+        puts "Correct!"
+        break
+      end
     end
   end
 
   #end of turn (end_turn handles stats and drink calculations but DOES NOT ADVANCE THE PLAYERS)
+  gets = game.gets
   turn_results = game.end_turn
   puts "The Card was #{turn_results[:card_string]}"
   puts "#{game.player.name} drinks #{turn_results[:players_drinks]}"
   puts "#{game.dealer.name} drinks #{turn_results[:dealers_drinks]}"
 
-  if game.gets == 3
-    puts "That's 3! #{game.dealer.name} gets to pass the deck!"
-    game.advance_dealer
+  if turn_results[:next_dealer]
+    old_dealer_name = game.dealer.name
+    game.players.actors[:player] = game.players.actors[:dealer]
+    game.players.advance :dealer
+    puts "That's #{gets+1}! #{old_dealer_name} pass the deck to #{game.dealer.name}!"
   else
-    puts "#{game.dealer.name} has #{game.gets_count} gets"
-    game.advance_player
+    puts "#{game.dealer.name} has #{game.gets} gets"
+    game.players.advance :player
   end
   
   puts game.status
 end
+puts "Thanks for playing!!"

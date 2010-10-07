@@ -1,5 +1,7 @@
 class FTD
   DEALER_DRINKS = 5
+  MAX_GETS = 3
+  MAX_GUESSES = 2
   attr_accessor :table, :deck, :players
   attr_reader :complete, :gets, :guess_count
 
@@ -31,11 +33,11 @@ class FTD
       when /j/i then 11
       when /q/i then 12
       when /k/i then 13
-      when /a/i then 1
+      when /a/i then 14
       else guess
     end
 
-    guess = Card.new(guess.to_i, 1)
+    guess = Card.new(guess.to_i-2, 1)
     @prev_guesses.push(guess)
     @guess_count += 1
 
@@ -51,12 +53,18 @@ class FTD
   def end_turn
     last_guess = @prev_guesses.pop
     turn_results = Hash.new(0)
-    if @current_card == last_guess
-      turn_results[:dealers_drinks] = @guess_count * DEALER_DRINKS
+    turn_results[:next_dealer] = false
+    if @current_card.rank.to_n == last_guess.rank.to_n
+      turn_results[:dealers_drinks] = (MAX_GUESSES - @guess_count+1) * DEALER_DRINKS
       @gets = 0
     else
-      turn_results[:players_drinks] = (last_guess - @current_card).abs
+      turn_results[:players_drinks] = (last_guess.rank.to_n - @current_card.rank.to_n).abs
       @gets += 1
+    end
+
+    if(@gets >= MAX_GETS)
+      turn_results[:next_dealer] = true
+      @gets = 0
     end
 
     @guess_count = 0
@@ -77,7 +85,7 @@ class FTD
     @table.each do |card|
       table_counts[card.rank.to_c] += 1
     end
-    puts table_counts
+    #puts table_counts
 
     output = "\nPlayed Cards:\n"
     (0..13).each { output += "-" }
