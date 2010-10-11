@@ -56,10 +56,21 @@ class FTD
     turn_results[:next_dealer] = false
     if @current_card.rank.to_n == last_guess.rank.to_n
       turn_results[:dealers_drinks] = (MAX_GUESSES - @guess_count+1) * DEALER_DRINKS
+      dealer.add_drinks(turn_results[:dealers_drinks])
       @gets = 0
+      if(@guess_count == 1)
+        puts "Bullseye"
+        player.got_bullseye
+      else
+        puts "Correct"
+        player.was_correct
+      end
     else
       turn_results[:players_drinks] = (last_guess.rank.to_n - @current_card.rank.to_n).abs
+      player.add_drinks(turn_results[:players_drinks])
       @gets += 1
+      puts "Just turn"
+      player.just_turn
     end
 
     if(@gets >= MAX_GETS)

@@ -22,6 +22,10 @@ class Player_Bench
     @players[i]
   end
 
+  def each(&block)
+    @players.each(&block)
+  end
+
   def add(player)
     if(player.respond_to?('name'))
       @players << player
@@ -56,6 +60,33 @@ class FTD_Player < Player
     @drinks = 0
     @correct = 0
     @bullseyes = 0
+    @turns = 0
     super(name)
+  end
+
+  def add_drinks(drinks)
+    @drinks += drinks
+  end
+
+  def was_correct
+    @correct += 1
+    @turns += 1
+  end
+
+  def got_bullseye
+    @bullseyes += 1
+    @turns += 1
+  end
+
+  def just_turn 
+    @turns += 1
+  end
+
+  def bullseye_percentage
+    (@bullseyes.to_f/@turns*100.00).round(2)
+  end
+
+  def correct_percentage
+    (@correct.to_f/@turns*100.00).round(2)
   end
 end

@@ -14,17 +14,17 @@ game = FTD.new
 
 #table = Table.new
 
-#puts "How many players will there be?"
-#player_count = gets.chomp.to_i
-#player_count.times do |i|
-#  puts "What is Player #{i+1}'s Name?"
-#  game.players.add(FTD_Player.new(gets.chomp))
-#end
+puts "How many players will there be?"
+player_count = gets.chomp.to_i
+player_count.times do |i|
+  puts "What is Player #{i+1}'s Name?"
+  game.players.add(FTD_Player.new(gets.chomp))
+end
 
-game.players.add(FTD_Player.new("Chris"))
-game.players.add(FTD_Player.new("Hayley"))
-game.players.add(FTD_Player.new("Bobby"))
-game.players.add(FTD_Player.new("Katie"))
+#game.players.add(FTD_Player.new("Chris"))
+#game.players.add(FTD_Player.new("Hayley"))
+#game.players.add(FTD_Player.new("Bobby"))
+#game.players.add(FTD_Player.new("Katie"))
 
 puts "Here we go!"
 #print out the table and current dealer & player
@@ -70,4 +70,10 @@ while ! game.complete do
   
   puts game.status
 end
-puts "Thanks for playing!!"
+puts "Thanks for playing!!\n\n"
+
+game.players.each do |player|
+  puts "#{player.name} drank #{player.drinks} drinks " + 
+    "(#{player.bullseye_percentage}% bullseyes; " + 
+    "#{player.correct_percentage}% 2nd guess)"
+end
