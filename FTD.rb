@@ -6,6 +6,10 @@ class FTD
   attr_reader :complete, :gets, :guess_count
 
   def initialize
+    start_fresh
+  end
+
+  def start_fresh
     @deck = Deck.new
     @deck.add_deck
     @deck.shuffle
@@ -21,11 +25,19 @@ class FTD
   end
 
   def player
-    @players[@players.actors[:player]]
+    @players[player_i]
+  end
+
+  def player_i
+    @players.actors[:player]
   end
 
   def dealer
-    @players[@players.actors[:dealer]]
+    @players[dealer_i]
+  end
+
+  def dealer_i
+    @players.actors[:dealer]
   end
 
   def guess(guess)
