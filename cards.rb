@@ -5,12 +5,26 @@ class Suit
   STRINGS = [ "Heart", "Diamond", "Club", "Spade" ]
   
   def initialize(suit)
-    throw SuitOutOfBoundsError unless (0..3) === suit.to_i
-    @suit = suit
+    @suit = case suit
+    when 0, /h/i
+      0
+    when 1, /d/i
+      1
+    when 2, /c/i
+      2
+    when 3, /s/i
+      3
+    else
+      throw SuitOutOfBoundsError
+    end
   end
 
   def to_s
     STRINGS[@suit]
+  end
+
+  def to_c
+    STRINGS[@suit][0].downcase
   end
 end
 
@@ -23,7 +37,7 @@ class Rank
 
   def initialize(rank)
     throw RankOutOfBoundsError unless (0..12) === rank.to_i 
-    @rank = rank
+    @rank = rank.to_i
   end
 
   def to_s
@@ -53,6 +67,10 @@ class Card
 
   def to_s
     "#{@rank} of #{@suit.to_s.pluralize}"
+  end
+
+  def to_db
+    "#{rank.to_n}#{suit.to_c}"
   end
 
   def value
@@ -121,6 +139,12 @@ class Deck
 
   def size
     @cards.size
+  end
+
+  def to_db
+    cards = []
+    @cards.each { |card| cards << card.to_db}
+    cards.join(",")
   end
 end
 
