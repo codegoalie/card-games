@@ -18,7 +18,7 @@ class Suit
     when 3, /s/i
       3
     else
-      throw SuitOutOfBoundsError
+      raise SuitOutOfBoundsError
     end
   end
 
@@ -27,20 +27,20 @@ class Suit
   end
 
   def to_c
-    STRINGS[@suit][0].downcase
+    STRINGS[@suit][0,1].downcase
   end
 end
 
 class Rank
-  STRINGS = [ "Two", "Three", "Four", "Five", "Six", "Seven", 
+  STRINGS   = ["Two", "Three", "Four", "Five", "Six", "Seven", 
               "Eight", "Nine", "Ten", "Jack", "Queen", "King", "Ace" ]
-  CHARS = ( 2..10 ).to_a + [ "J", "Q", "K", "A" ]
-  NUMERALS = (0..12).to_a
-  VALUES = (2..10).to_a + [ 10, 10, 10, 10 ]
+  CHARS     = (2..10).to_a + [ "J", "Q", "K", "A" ]
+  NUMERALS  = (2..14).to_a
+  VALUES    = (2..10).to_a + [ 10, 10, 10, 10 ]
 
   def initialize(rank)
-    throw RankOutOfBoundsError unless (0..12) === rank.to_i 
-    @rank = rank.to_i
+    raise RankOutOfBoundsError unless (2..14) === rank.to_i 
+    @rank = rank.to_i - 2
   end
 
   def to_s
@@ -87,6 +87,7 @@ class Card
   def >(card)
     @rank.to_n > card.rank.to_n
   end
+
 end
 
 class Deck
@@ -98,16 +99,17 @@ class Deck
   def add_deck
     @cards ||= []
     (0..3).each do |s|
-      (0..12).each do |r|
+      (2..14).each do |r|
         @cards << Card.new(r, s)
       end
     end
+    true
   end
 
   def draw
     @cards.shift
   end
-   
+
   def draw_all
     to_discard = @cards
     @cards = []
@@ -128,7 +130,7 @@ class Deck
   def each
     @cards.each { |card| yield card }
   end
-        
+
   def [](index)
     @cards[index]
   end
@@ -152,11 +154,24 @@ class Deck
   end
 end
 
-class Player
-  attr_accessor :name, :cards
+class Web_Deck < Deck
+  attr_accessor :redis_key
 
-  def initialize(name)
-    @name = name
-    @cards = []
+  def initialize redis_key
+    @redis_key = redis_key
+    @cards ||= []
+    $r.lrange(redis_key, 0, -1).each do |c|
+      @cards << Card.new(c[0,c.size-1], c[-1,1])
+    end
+  end
+
+  def place card
+    super
+    $r.rpush @redis_key, card.to_db
+  end
+
+  def draw
+    $r.lpop @redis_key
+    super
   end
 end
