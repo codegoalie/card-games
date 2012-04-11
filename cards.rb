@@ -3,7 +3,7 @@ require 'active_support/inflector'
 
 class Suit
   STRINGS = [ "Heart", "Diamond", "Club", "Spade" ]
-  
+
   def initialize(suit)
     @suit = case suit
     when 0, /h/i
