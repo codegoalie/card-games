@@ -40,18 +40,18 @@ deal_or_exit = 'd'
 while deal_or_exit != 'e'
   player_bet = bankroll
   puts "Your current bankroll is $#{bankroll}"
-  while 1
+  while
     puts "How much would you like to bet?"
     player_bet = gets.chomp.to_i
     break unless player_bet > bankroll
-    puts "You can only bet up to your bankroll of #{bankroll}"   
+    puts "You can only bet up to your bankroll of #{bankroll}"
   end
   bankroll -= player_bet
 
   discard << player_hand.draw_all
   discard << dealer_hand.draw_all
 
-  if shoe.size < 10 
+  if shoe.size < 10
     puts "Refilling shoe and shuffling"
     shoe << discard.draw_all
     shoe.shuffle
@@ -100,7 +100,7 @@ while deal_or_exit != 'e'
   else
     puts "You lose #{player_bet}..."
   end
-  
+
   if bankroll > 0
     puts "Would you like to (d)eal again or (e)xit?"
     deal_or_exit = gets.chomp
@@ -110,5 +110,5 @@ while deal_or_exit != 'e'
   end
 end
 
-puts "You finished with $#{bankroll}." 
+puts "You finished with $#{bankroll}."
 puts "That's a #{bankroll > 200 ? 'profit' : 'loss'} of #{(bankroll-200).abs}(#{(bankroll-200).abs/2}%)"
