@@ -1,4 +1,4 @@
-require './cards.rb'
+require_relative './../lib/deck.rb'
 
 class Hand < Deck
   def value
